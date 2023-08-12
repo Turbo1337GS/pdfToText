@@ -40,15 +40,15 @@ To use the program, follow these steps:
 
 5. Once the program finishes, check the `TXTS` folder for the extracted text files.
 
-Note: Make sure you have the necessary dependencies installed (PyPDF2, tqdm).
+Note: Make sure you have the necessary dependencies installed (extract_text, tqdm).
 
 ## Example Usage
 
 ```python
 import os
 import re
-import PyPDF2
 from tqdm import tqdm
+from pdfminer.high_level import extract_text
 
 # Functions and program code here...
 
