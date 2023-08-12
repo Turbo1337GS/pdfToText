@@ -1,27 +1,25 @@
 import os
 import re
-import PyPDF2
 from tqdm import tqdm
+from pdfminer.high_level import extract_text
 
 def clean_filename(filename):
     """Cleans the filename by replacing spaces with underscores and removing unwanted characters."""
     cleaned_name = re.sub(r'[^a-zA-Z0-9_.-]', '', filename.replace(" ", "_"))
     return cleaned_name
 
-def extract_text_from_pdf(pdf_path, output_path):
-    """Extracts text from a given PDF and writes the extracted text to an output file."""
-    with open(pdf_path, 'rb') as file:
-        reader = PyPDF2.PdfReader(file)
-        text = ''
-        for page_num in tqdm(range(len(reader.pages)), desc="Extracting text", leave=False):
-            text += reader.pages[page_num].extract_text()
-
+def clean_extracted_text(text):
+    """Cleans the extracted text."""
     text = re.sub(r'\[\d+\]', '', text)
-    text = re.sub(r'\n+', '\n', text)
     text = re.sub(r'_____','', text)
-    text = re.sub(r'  \n+','\n', text)
-    
+    text = re.sub(r'\s+', ' ', text)
+    return text
 
+def extract_text_from_pdf(pdf_path, output_path):
+    """Extracts text from a given PDF and writes the extracted text to an output file using pdfminer."""
+    text = extract_text(pdf_path)
+    text = clean_extracted_text(text)
+    
     with open(output_path, 'w', encoding='utf-8') as out_file:
         out_file.write(text)
 
